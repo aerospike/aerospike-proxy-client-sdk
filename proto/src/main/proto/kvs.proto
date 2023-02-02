@@ -1,0 +1,167 @@
+syntax = "proto3";
+
+option go_package = "aerospike.com/proxy/protos/";
+option java_package = "com.aerospike.proxy.client";
+
+// The about request message.
+message AboutRequest {
+    // Empty for now.
+}
+
+// The about response message.
+message AboutResponse {
+    // Empty for now.
+}
+
+// Read policy for AP (availability) namespaces.
+// How duplicates should be consulted in a read operation.
+// Only makes a difference during migrations and only applicable in AP mode.
+enum ReadModeAP {
+    // Involve single node in the read operation.
+    ONE = 0;
+
+    // Involve all duplicates in the read operation.
+    ALL = 1;
+}
+
+// Read policy for SC (strong consistency) namespaces.
+// Determines SC read consistency options.
+enum ReadModeSC {
+    // Ensures this client will only see an increasing sequence of record versions.
+    // Server only reads from master.  This is the default.
+    SESSION = 0;
+
+    // Ensures ALL clients will only see an increasing sequence of record versions.
+    // Server only reads from master.
+    LINEARIZE = 1;
+
+    // Server may read from master or any full (non-migrating) replica.
+    // Increasing sequence of record versions is not guaranteed.
+    ALLOW_REPLICA = 2;
+
+    // Server may read from master or any full (non-migrating) replica or from unavailable
+    // partitions.  Increasing sequence of record versions is not guaranteed.
+    ALLOW_UNAVAILABLE = 3;
+}
+
+// Defines algorithm used to determine the target node for a command.
+// Scan and query are not affected by replica algorithm.
+//
+// Note: The enum ordinals do not match the Aerospike Client ordinals because
+// the default has to be ordinal zero in protobuf.
+enum Replica {
+    // Try node containing master partition first.
+    // If connection fails, all commands try nodes containing replicated partitions.
+    // If socketTimeout is reached, reads also try nodes containing replicated partitions,
+    // but writes remain on master node.
+    SEQUENCE = 0;
+
+    // Use node containing key's master partition.
+    MASTER = 1;
+
+    // Distribute reads across nodes containing key's master and replicated partitions
+    // in round-robin fashion.  Writes always use node containing key's master partition.
+    MASTER_PROLES = 2;
+
+    // Try node on the same rack as the client first.  If timeout or there are no nodes on the
+    // same rack, use SEQUENCE instead.
+    PREFER_RACK = 3;
+
+    // Distribute reads across all nodes in cluster in round-robin fashion.
+    // Writes always use node containing key's master partition.
+    // This option is useful when the replication factor equals the number
+    // of nodes in the cluster and the overhead of requesting proles is not desired.
+    RANDOM = 4;
+}
+
+// Read policy attributes used in read database commands that are not part of
+// the wire protocol.
+message ReadPolicy {
+    // Read policy for AP (availability) namespaces.
+    Replica replica = 1;
+
+    // Read policy for SC (strong consistency) namespaces.
+    ReadModeAP readModeAP = 2;
+
+    // Replica algorithm used to determine the target node
+    // for a single record command.
+    // Scan and query are not affected by replica algorithms.
+    ReadModeSC readModeSC = 3;
+}
+
+// Write policy attributes used in write database commands that are not part of
+// the wire protocol.
+message WritePolicy {
+    // Read policy for AP (availability) namespaces.
+    Replica replica = 1;
+
+    // Read policy for SC (strong consistency) namespaces.
+    ReadModeAP readModeAP = 2;
+
+    // Replica algorithm used to determine the target node
+    // for a single record command.
+    // Scan and query are not affected by replica algorithms.
+    ReadModeSC readModeSC = 3;
+}
+
+// The request message containing the user's name.
+message AerospikeRequestPayload {
+    // Unique identifier of the request in the stream.
+    uint32 id = 1;
+
+    // Client retry iteration.
+    uint32 iteration = 2;
+
+    // Aerospike wire format request payload.
+    bytes payload = 3;
+
+    // Read policy for read requests.
+    optional ReadPolicy readPolicy = 4;
+
+    // Write policy for write requests.
+    optional WritePolicy writePolicy = 5;
+}
+
+// The request message containing the user's name.
+message AerospikeResponsePayload {
+    // Unique identifier of the corresponding request in the stream.
+    uint32 id = 1;
+
+    // Indoubt flag indicates that the write transaction may have completed,
+    // even though the client sees an error.
+    bool inDoubt = 2;
+
+    // Aerospike wire format request payload.
+    bytes payload = 3;
+}
+
+// Information about the service.
+service About {
+    rpc Get (AboutRequest) returns (AboutResponse) {}
+}
+
+// Aerospike KVS operations service
+service KVS {
+    // Get a single record
+    rpc Get (AerospikeRequestPayload) returns
+            (AerospikeResponsePayload) {}
+
+    // Process stream of single record GET requests.
+    rpc GetStreaming (stream AerospikeRequestPayload) returns
+            (stream AerospikeResponsePayload) {}
+
+    // Write a single record
+    rpc Put (AerospikeRequestPayload) returns
+            (AerospikeResponsePayload) {}
+
+    // Process stream of single record PUT requests.
+    rpc PutStreaming (stream AerospikeRequestPayload) returns
+            (stream AerospikeResponsePayload) {}
+}
+
+// Aerospike queries
+service Query {
+    // Query Aerospike server
+    rpc Query (AerospikeRequestPayload) returns
+            (stream AerospikeResponsePayload) {}
+}
