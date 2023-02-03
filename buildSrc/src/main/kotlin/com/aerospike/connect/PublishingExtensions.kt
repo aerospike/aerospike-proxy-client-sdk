@@ -67,7 +67,7 @@ fun Project.setupPublishingTasks() {
                 description.set(
                     "Outbound connector SDK for change notification transformers.")
                 url.set(
-                    "https://github.com/aerospike/aerospike-connect-outbound-sdk")
+                    "https://github.com/aerospike/aerospike-proxy-client-sdk")
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
@@ -77,11 +77,11 @@ fun Project.setupPublishingTasks() {
                 }
                 scm {
                     connection.set(
-                        "scm:git@github.com:aerospike/aerospike-connect-outbound-sdk.git")
+                        "scm:git@github.com:aerospike/aerospike-proxy-client-sdk.git")
                     developerConnection.set(
-                        "scm:git@github.com:aerospike/aerospike-connect-outbound-sdk.git")
+                        "scm:git@github.com:aerospike/aerospike-proxy-client-sdk.git")
                     url.set(
-                        "https://github.com/aerospike/aerospike-connect-outbound-sdk")
+                        "https://github.com/aerospike/aerospike-proxy-client-sdk")
                 }
                 developers {
                     developer {
