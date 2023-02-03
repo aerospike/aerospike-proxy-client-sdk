@@ -38,14 +38,15 @@ fun Project.setupPublishingTasks() {
     publishing.repositories {
         maven {
             val releaseRepo =
-                URI("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                project.properties["releaseRepo"]?.toString() ?: "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             val snapshotRepo =
-                URI("https://oss.sonatype.org/content/repositories/snapshots/")
-            url = if (!isSnapshotVersion()) releaseRepo else snapshotRepo
+                project.properties["snapshotRepo"]?.toString() ?: "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = URI(if (!isSnapshotVersion()) releaseRepo else snapshotRepo)
             credentials {
                 username = project.properties["ossrhUsername"] as? String
                 password = project.properties["ossrhPassword"] as? String
             }
+            isAllowInsecureProtocol = true
         }
     }
 
