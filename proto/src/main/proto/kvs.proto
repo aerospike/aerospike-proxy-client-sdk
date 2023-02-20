@@ -157,6 +157,10 @@ service KVS {
     // Process stream of single record PUT requests.
     rpc PutStreaming (stream AerospikeRequestPayload) returns
             (stream AerospikeResponsePayload) {}
+
+    // Process batch requests.
+    rpc BatchGet (AerospikeRequestPayload) returns
+            (stream AerospikeResponsePayload) {}
 }
 
 // Aerospike queries
