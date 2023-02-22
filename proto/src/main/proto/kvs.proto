@@ -167,7 +167,7 @@ service KVS {
             (stream AerospikeResponsePayload) {}
 
     // Process stream of batch requests.
-    rpc BatchGetStreaming (AerospikeRequestPayload) returns
+    rpc BatchGetStreaming (stream AerospikeRequestPayload) returns
         (stream AerospikeResponsePayload) {}
 }
 
