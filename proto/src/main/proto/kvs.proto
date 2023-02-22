@@ -133,6 +133,10 @@ message AerospikeResponsePayload {
 
     // Aerospike wire format request payload.
     bytes payload = 3;
+
+    // The hasNext flag indicates more responses will be sent by the proxy
+    // server for this request.
+    bool hasNext = 4;
 }
 
 // Information about the service.
@@ -161,6 +165,10 @@ service KVS {
     // Process batch requests.
     rpc BatchGet (AerospikeRequestPayload) returns
             (stream AerospikeResponsePayload) {}
+
+    // Process stream of batch requests.
+    rpc BatchGetStreaming (AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
 }
 
 // Aerospike queries
