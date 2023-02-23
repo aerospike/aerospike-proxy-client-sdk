@@ -127,12 +127,25 @@ message AerospikeResponsePayload {
     // Unique identifier of the corresponding request in the stream.
     uint32 id = 1;
 
-    // Indoubt flag indicates that the write transaction may have completed,
+    // Status of the corresponding request.
+    //  if status equals 0
+    //     The proxy received a valid response from Aerospike.The client
+    //     should still look at the payload's result code for determining success.
+    //  else
+    //     The request failed at the proxy. This status should be used
+    //     as the client result code.
+    uint32 status = 2;
+
+    // This flag indicates that the write transaction may have completed,
     // even though the client sees an error.
-    bool inDoubt = 2;
+    bool inDoubt = 3;
 
     // Aerospike wire format request payload.
-    bytes payload = 3;
+    bytes payload = 4;
+
+    // The hasNext flag indicates more responses will be sent by the proxy
+    // server for this request.
+    bool hasNext = 5;
 }
 
 // Information about the service.
@@ -150,6 +163,22 @@ service KVS {
     rpc GetStreaming (stream AerospikeRequestPayload) returns
             (stream AerospikeResponsePayload) {}
 
+    // Get a single record header containing metadata like generation, expiration
+    rpc GetHeader (AerospikeRequestPayload) returns
+        (AerospikeResponsePayload) {}
+
+    // Process stream of single record get header requests.
+    rpc GetHeaderStreaming (stream AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
+
+    // Check if a record exists.
+    rpc Exists (AerospikeRequestPayload) returns
+        (AerospikeResponsePayload) {}
+
+    // Process stream of single record exist requests.
+    rpc ExistsStreaming (stream AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
+
     // Write a single record
     rpc Put (AerospikeRequestPayload) returns
             (AerospikeResponsePayload) {}
@@ -157,6 +186,46 @@ service KVS {
     // Process stream of single record PUT requests.
     rpc PutStreaming (stream AerospikeRequestPayload) returns
             (stream AerospikeResponsePayload) {}
+
+    // Delete a single record.
+    rpc Delete (AerospikeRequestPayload) returns
+        (AerospikeResponsePayload) {}
+
+    // Process stream of single record delete requests.
+    rpc DeleteStreaming (stream AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
+
+    // Reset single record's time to expiration using the write policy's expiration.
+    rpc Touch (AerospikeRequestPayload) returns
+        (AerospikeResponsePayload) {}
+
+    // Process stream of single record touch requests.
+    rpc TouchStreaming (stream AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
+
+    // Perform multiple read/write operations on a single key in one batch call.
+    rpc Operate (AerospikeRequestPayload) returns
+        (AerospikeResponsePayload) {}
+
+    // Perform a stream of operate requests.
+    rpc OperateStreaming (stream AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
+
+    // Execute single key user defined function on server and return results.
+    rpc Execute (AerospikeRequestPayload) returns
+        (AerospikeResponsePayload) {}
+
+    // Process stream of single record execute requests.
+    rpc ExecuteStreaming (stream AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
+
+    // Process batch requests.
+    rpc BatchOperate (AerospikeRequestPayload) returns
+            (stream AerospikeResponsePayload) {}
+
+    // Process stream of batch requests.
+    rpc BatchOperateStreaming (stream AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
 }
 
 // Aerospike queries
