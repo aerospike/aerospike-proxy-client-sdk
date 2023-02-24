@@ -27,6 +27,7 @@ import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.getByName
 import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.provideDelegate
+import org.gradle.kotlin.dsl.withType
 
 /**
  * Setup Java tasks and compiler arguments.
@@ -51,8 +52,8 @@ fun Project.setupJavaBuild() {
         options {
             this as StandardJavadocDocletOptions
 
-            // Fail on Javadoc lint errors.
-            addBooleanOption("Xdoclint:all", true)
+            // Supress Javadoc lint errors as gRPC generated stubs don't have proper Javadoc.
+            addBooleanOption("Xdoclint:none", true)
         }
     }
 }
