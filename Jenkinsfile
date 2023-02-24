@@ -24,7 +24,7 @@ pipeline {
                     steps {
                         echo "Building.."
                         sh "./gradlew --no-daemon clean build"
-                        sh "file proto/build/libs/aerospike-proxy-proto-*.jarr || exit 0"
+                        sh "file proto/build/libs/aerospike-proxy-proto-*.jarr | grep 'No such file or directoryr' || exit 0"
                     }
                 }
 
