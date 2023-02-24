@@ -40,10 +40,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: '**/build/test-results/**/*.xml'
-            archiveArtifacts artifacts: '**/build/libs/**/*.jar,**/build/distributions/*', fingerprint: true
-            archiveArtifacts artifacts: '**/build/reports/**/*', fingerprint: true
-            junit testResults: '**/build/test-results/**/*.xml', keepLongStdio: true
+            archiveArtifacts artifacts: '**/build/libs/**/*.jar', fingerprint: true
             step([$class: 'JacocoPublisher'])
         }
         cleanup {
