@@ -24,7 +24,7 @@ pipeline {
                     steps {
                         echo "Building.."
                         sh "./gradlew --no-daemon clean build"
-                        sh "ls proto/build/libs/aerospike-proxy-proto-*.jarr"
+                        sh "ls proto/build/libs/aerospike-proxy-proto-*.jar"
                     }
                 }
 
