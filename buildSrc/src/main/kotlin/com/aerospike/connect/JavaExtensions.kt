@@ -52,7 +52,8 @@ fun Project.setupJavaBuild() {
         options {
             this as StandardJavadocDocletOptions
 
-            // Supress Javadoc lint errors as gRPC generated stubs don't have proper Javadoc.
+            // Supress Javadoc lint errors as gRPC generated stubs don't have
+            // proper Javadoc.
             addBooleanOption("Xdoclint:none", true)
         }
     }

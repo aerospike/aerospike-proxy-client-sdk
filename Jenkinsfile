@@ -28,6 +28,15 @@ pipeline {
                     }
                 }
 
+                stage("Vulnerability scanning") {
+                    steps {
+                        script {
+                            echo "Running snyk scan.."
+                            sh "./gradlew --no-daemon vulnerabilityScan --continue"
+                        }
+                    }
+                }
+
                 stage("Upload") {
                     steps {
                         echo "Uploading archives.."
