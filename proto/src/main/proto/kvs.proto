@@ -226,6 +226,23 @@ service KVS {
     // Process stream of batch requests.
     rpc BatchOperateStreaming (stream AerospikeRequestPayload) returns
         (stream AerospikeResponsePayload) {}
+
+    // Process append request on a single record.
+    rpc Append (AerospikeRequestPayload) returns
+        (AerospikeResponsePayload) {}
+
+    // Process stream of single record append requests.
+    rpc AppendStreaming (stream AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
+
+
+    // Process prepend request on a single record.
+    rpc Prepend (AerospikeRequestPayload) returns
+        (AerospikeResponsePayload) {}
+
+    // Process stream of single record prepend requests.
+    rpc PrependStreaming (stream AerospikeRequestPayload) returns
+        (stream AerospikeResponsePayload) {}
 }
 
 // Aerospike queries
