@@ -129,12 +129,12 @@ message AerospikeResponsePayload {
 
     // Status of the corresponding request.
     //  if status equals 0
-    //     The proxy received a valid response from Aerospike.The client
-    //     should still look at the payload's result code for determining success.
+    //     The proxy received a valid response from Aerospike. The payload's
+    //     result code should be used as the client result code.
     //  else
     //     The request failed at the proxy. This status should be used
     //     as the client result code.
-    uint32 status = 2;
+    int32 status = 2;
 
     // This flag indicates that the write transaction may have completed,
     // even though the client sees an error.
@@ -143,8 +143,9 @@ message AerospikeResponsePayload {
     // Aerospike wire format request payload.
     bytes payload = 4;
 
-    // The hasNext flag indicates more responses will be sent by the proxy
-    // server for this request.
+    // For requests with multiple responses like batch and queries,
+    // hasNext flag indicates if there are more responses to follow this
+    // response or if this is the last response for this request.
     bool hasNext = 5;
 }
 
