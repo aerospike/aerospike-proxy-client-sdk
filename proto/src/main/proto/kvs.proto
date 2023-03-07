@@ -156,12 +156,12 @@ service About {
 
 // Aerospike KVS operations service
 service KVS {
-    // Get a single record
-    rpc Get (AerospikeRequestPayload) returns
+    // Read a single record
+    rpc Read (AerospikeRequestPayload) returns
             (AerospikeResponsePayload) {}
 
-    // Process stream of single record GET requests.
-    rpc GetStreaming (stream AerospikeRequestPayload) returns
+    // Process stream of single record read requests.
+    rpc ReadStreaming (stream AerospikeRequestPayload) returns
             (stream AerospikeResponsePayload) {}
 
     // Get a single record header containing metadata like generation, expiration
@@ -181,18 +181,18 @@ service KVS {
         (stream AerospikeResponsePayload) {}
 
     // Write a single record
-    rpc Put (AerospikeRequestPayload) returns
+    rpc Write (AerospikeRequestPayload) returns
             (AerospikeResponsePayload) {}
 
-    // Process stream of single record PUT requests.
-    rpc PutStreaming (stream AerospikeRequestPayload) returns
+    // Process a stream of single record write requests.
+    rpc WriteStreaming (stream AerospikeRequestPayload) returns
             (stream AerospikeResponsePayload) {}
 
     // Delete a single record.
     rpc Delete (AerospikeRequestPayload) returns
         (AerospikeResponsePayload) {}
 
-    // Process stream of single record delete requests.
+    // Process a stream of single record delete requests.
     rpc DeleteStreaming (stream AerospikeRequestPayload) returns
         (stream AerospikeResponsePayload) {}
 
@@ -200,7 +200,7 @@ service KVS {
     rpc Touch (AerospikeRequestPayload) returns
         (AerospikeResponsePayload) {}
 
-    // Process stream of single record touch requests.
+    // Process a stream of single record touch requests.
     rpc TouchStreaming (stream AerospikeRequestPayload) returns
         (stream AerospikeResponsePayload) {}
 
@@ -216,7 +216,7 @@ service KVS {
     rpc Execute (AerospikeRequestPayload) returns
         (AerospikeResponsePayload) {}
 
-    // Process stream of single record execute requests.
+    // Process a stream of single record execute requests.
     rpc ExecuteStreaming (stream AerospikeRequestPayload) returns
         (stream AerospikeResponsePayload) {}
 
@@ -224,7 +224,7 @@ service KVS {
     rpc BatchOperate (AerospikeRequestPayload) returns
             (stream AerospikeResponsePayload) {}
 
-    // Process stream of batch requests.
+    // Process a stream of batch requests.
     rpc BatchOperateStreaming (stream AerospikeRequestPayload) returns
         (stream AerospikeResponsePayload) {}
 }

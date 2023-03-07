@@ -75,7 +75,7 @@ subprojects {
     project.extra["jacksonVersion"] = "2.14.1"
     project.extra["protobufVersion"] = "3.21.7"
     project.extra["protocVersion"] = project.extra["protobufVersion"]
-    project.extra["grpcVersion"] = "1.52.1"
+    project.extra["grpcVersion"] = "1.53.0"
     project.extra["coroutinesVersion"] = "1.6.4"
     project.extra["grpcKotlinVersion"] = "1.3.0"
 
