@@ -127,6 +127,11 @@ message AerospikeRequestPayload {
 
   // Request for running a query.
   optional QueryRequest queryRequest = 7;
+
+  // Request for executing operations background on matching records.
+  optional BackgroundExecuteRequest backgroundExecuteRequest = 8;
+
+  optional BackgroundTaskStatusRequest backgroundTaskStatusRequest = 9;
 }
 
 // The request message containing the user's name.
@@ -154,6 +159,9 @@ message AerospikeResponsePayload {
   // hasNext flag indicates if there are more responses to follow this
   // response or if this is the last response for this request.
   bool hasNext = 5;
+
+  // Background task status, populated for background task request.
+  optional BackgroundTaskStatus backgroundTaskStatus = 6;
 }
 
 // Information about the service.
@@ -533,6 +541,182 @@ message QueryRequest {
   optional PartitionFilter partitionFilter = 4;
 }
 
+enum RecordExistsAction {
+  // Create or update record.
+  // Merge write command bins with existing bins.
+  UPDATE = 0;
+
+  // Update record only. Fail if record does not exist.
+  // Merge write command bins with existing bins.
+  UPDATE_ONLY = 1;
+
+  // Create or replace record.
+  // Delete existing bins not referenced by write command bins.
+  // Supported by Aerospike server versions &gt;= 3.1.6.
+  REPLACE = 2;
+
+  // Replace record only. Fail if record does not exist.
+  // Delete existing bins not referenced by write command bins.
+  // Supported by Aerospike server versions &gt;= 3.1.6.
+  REPLACE_ONLY = 3;
+
+  // Create only.  Fail if record exists.
+  CREATE_ONLY = 4;
+}
+
+enum GenerationPolicy {
+  // Do not use record generation to restrict writes.
+  NONE = 0;
+
+  // Update/delete record if expected generation is equal to server generation. Otherwise, fail.
+  EXPECT_GEN_EQUAL = 1;
+
+  // Update/delete record if expected generation greater than the server generation. Otherwise, fail.
+  // This is useful for restore after backup.
+  EXPECT_GEN_GT = 2;
+}
+
+enum CommitLevel {
+  // Server should wait until successfully committing master and all replicas.
+  COMMIT_ALL = 0;
+
+  // Server should wait until successfully committing master only.
+  COMMIT_MASTER = 1;
+}
+
+message BackgroundExecutePolicy {
+  // Read policy for AP (availability) namespaces.
+  Replica replica = 1;
+
+  // Read policy for SC (strong consistency) namespaces.
+  ReadModeAP readModeAP = 2;
+
+  // Replica algorithm used to determine the target node
+  // for a single record command.
+  // Scan and scan are not affected by replica algorithms.
+  ReadModeSC readModeSC = 3;
+
+  // Use zlib compression on command buffers sent to the server and responses received
+  // from the server when the buffer size is greater than 128 bytes.
+  // This option will increase cpu and memory usage (for extra compressed buffers),but
+  // decrease the size of data sent over the network.
+  bool compress = 4;
+
+  // Optional expression filter. If filterExp exists and evaluates to false, the
+  // transaction is ignored.
+  optional bytes expression = 5;
+
+  // Total transaction timeout in milliseconds.
+  // Default for all other commands: 1000ms
+  optional uint32 totalTimeout = 6;
+
+  // Send user defined key in addition to hash digest on both reads and writes.
+  // If the key is sent on a write, the key will be stored with the record on
+  // the server.
+  // <p>
+  // Default: false (do not send the user defined key)
+  optional bool sendKey = 7;
+
+  // Qualify how to handle writes where the record already exists.
+  //
+  // Default: RecordExistsAction.UPDATE
+  optional RecordExistsAction recordExistsAction = 8;
+
+  // Qualify how to handle record writes based on record generation. The default (NONE)
+  // indicates that the generation is not used to restrict writes.
+  //
+  // The server does not support this field for UDF execute() calls. The read-modify-write
+  // usage model can still be enforced inside the UDF code itself.
+  //
+  // Default: GenerationPolicy.NONE
+  optional GenerationPolicy generationPolicy = 9;
+
+  // Desired consistency guarantee when committing a transaction on the server. The default
+  // (COMMIT_ALL) indicates that the server should wait for master and all replica commits to
+  // be successful before returning success to the client.
+  //
+  // Default: CommitLevel.COMMIT_ALL
+  optional CommitLevel commitLevel = 10;
+
+  // Expected generation. Generation is the number of times a record has been modified
+  // (including creation) on the server. If a write operation is creating a record,
+  // the expected generation would be <code>0</code>. This field is only relevant when
+  // generationPolicy is not NONE.
+  //
+  // The server does not support this field for UDF execute() calls. The read-modify-write
+  // usage model can still be enforced inside the UDF code itself.
+  //
+  // Default: 0
+  optional uint32 generation = 11;
+
+  // Record expiration. Also known as ttl (time to live).
+  // Seconds record will live before being removed by the server.
+  //
+  // Expiration values:
+  //
+  //  - -2: Do not change ttl when record is updated.
+  //  - -1: Never expire.
+  //  - 0: Default to namespace configuration variable "default-ttl" on the server.
+  //  - &gt; 0: Actual ttl in seconds.<br>
+  //
+  // Default: 0
+  optional uint32 expiration = 12;
+
+  // For client operate(), return a result for every operation.
+  //
+  // Some operations do not return results by default (ListOperation.clear() for example).
+  // This can make it difficult to determine the desired result offset in the returned
+  // bin's result list.
+  //
+  // Setting respondAllOps to true makes it easier to identify the desired result offset
+  // (result offset equals bin's operate sequence).  If there is a map operation in operate(),
+  // respondAllOps will be forced to true for that operate() call.
+  //
+  // Default: false
+  optional bool respondAllOps = 13;
+
+  // If the transaction results in a record deletion, leave a tombstone for the record.
+  // This prevents deleted records from reappearing after node failures.
+  // Valid for Aerospike Server Enterprise Edition 3.10+ only.
+  //
+  // Default: false (do not tombstone deleted records).
+  optional bool durableDelete = 14;
+
+  // Operate in XDR mode.  Some external connectors may need to emulate an XDR client.
+  // If enabled, an XDR bit is set for writes in the wire protocol.
+  //
+  // Default: false.
+  optional bool xdr = 15;
+}
+
+message BackgroundExecuteRequest {
+  // Background write policy
+  optional BackgroundExecutePolicy writePolicy = 1;
+
+  // The statement containing the UDF function reference
+  // or the operations to be performed on matching record
+  Statement statement = 2;
+}
+
+enum BackgroundTaskStatus {
+  // Task not found.
+  NOT_FOUND = 0;
+
+  // Task in progress.
+  IN_PROGRESS = 1;
+
+  // Task completed.
+  COMPLETE = 2;
+}
+
+message BackgroundTaskStatusRequest {
+  // The id of the task.
+  int64 taskId = 1;
+
+  // If true indicates the task is a scan task else task is a query
+  bool isScan = 2;
+}
+
 // Aerospike queries
 service Query {
   // Query Aerospike
@@ -541,5 +725,21 @@ service Query {
 
   // Process a stream of query requests
   rpc QueryStreaming (stream AerospikeRequestPayload) returns
+      (stream AerospikeResponsePayload) {}
+
+  // Execute background write on selected records.
+  rpc BackgroundExecute(AerospikeRequestPayload) returns
+      (stream AerospikeResponsePayload) {}
+
+  // Execute a stream of  background write requests.
+  rpc BackgroundExecuteStreaming(stream AerospikeRequestPayload) returns
+      (stream AerospikeResponsePayload) {}
+
+  // Get status of a background task.
+  rpc BackgroundTaskStatus(AerospikeRequestPayload) returns
+      (stream AerospikeResponsePayload) {}
+
+  // Get status of a stream of background tasks.
+  rpc BackgroundTaskStatusStreaming(stream AerospikeRequestPayload) returns
       (stream AerospikeResponsePayload) {}
 }
