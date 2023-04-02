@@ -301,6 +301,18 @@ message ScanPolicy {
   optional bool includeBinData = 11;
 }
 
+// Partition status used to perform partial scans on client side retries.
+message PartitionStatus {
+  // The partition status.
+  optional uint32 id = 1;
+
+  // Begin value to start scanning / querying after.
+  optional int64 bVal = 2;
+
+  // Digest to start scanning / querying after.
+  optional bytes digest = 3;
+}
+
 // A partition filter for scans and queries.
 message PartitionFilter {
   // Start partition id.
@@ -331,6 +343,10 @@ message ScanRequest {
 
   // Optional partition filter to selectively scan partitions.
   optional PartitionFilter partitionFilter = 5;
+
+  // Optional partition statuses used on retries to restart
+  // from last known record for the partition.
+  repeated PartitionStatus partitionStatuses = 6;
 }
 
 // Aerospike scan
@@ -539,6 +555,10 @@ message QueryRequest {
 
   // Optional partition filter to selectively query partitions.
   optional PartitionFilter partitionFilter = 4;
+
+  // Optional partition statuses used on retry to restart
+  // from last known record for a partition.
+  repeated PartitionStatus partitionStatuses = 5;
 }
 
 enum RecordExistsAction {
