@@ -428,6 +428,12 @@ message QueryPolicy {
   // and server versions &lt; 6.0.
   // Default: false
   optional bool shortQuery = 12;
+
+  // Timeout in milliseconds for "cluster-stable" info command that is run when
+  // failOnClusterChange is true and server version is less than 6.0.
+  //
+  //  Default: 1000
+  optional uint32 infoTimeout = 13;
 }
 
 
