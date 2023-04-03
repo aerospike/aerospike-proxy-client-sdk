@@ -128,10 +128,14 @@ message AerospikeRequestPayload {
   // Request for running a query.
   optional QueryRequest queryRequest = 7;
 
-  // Request for executing operations background on matching records.
-  optional BackgroundExecuteRequest backgroundExecuteRequest = 8;
+  // Abort a scan/query on application error.
+  optional AbortRequest abortRequest = 8;
 
-  optional BackgroundTaskStatusRequest backgroundTaskStatusRequest = 9;
+  // Request for executing operations background on matching records.
+  optional BackgroundExecuteRequest backgroundExecuteRequest = 9;
+
+  // Request for getting background task status.
+  optional BackgroundTaskStatusRequest backgroundTaskStatusRequest = 10;
 }
 
 // The request message containing the user's name.
@@ -324,6 +328,10 @@ message PartitionFilter {
 
   // Optional digest to start scanning from.
   optional bytes digest = 3;
+
+  // Optional partition statuses used on retries to restart
+  // from last known record for the partition.
+  repeated PartitionStatus partitionStatuses = 4;
 }
 
 // A scan request.
@@ -343,10 +351,6 @@ message ScanRequest {
 
   // Optional partition filter to selectively scan partitions.
   optional PartitionFilter partitionFilter = 5;
-
-  // Optional partition statuses used on retries to restart
-  // from last known record for the partition.
-  repeated PartitionStatus partitionStatuses = 6;
 }
 
 // Aerospike scan
@@ -555,10 +559,6 @@ message QueryRequest {
 
   // Optional partition filter to selectively query partitions.
   optional PartitionFilter partitionFilter = 4;
-
-  // Optional partition statuses used on retry to restart
-  // from last known record for a partition.
-  repeated PartitionStatus partitionStatuses = 5;
 }
 
 enum RecordExistsAction {
@@ -735,6 +735,13 @@ message BackgroundTaskStatusRequest {
 
   // If true indicates the task is a scan task else task is a query
   bool isScan = 2;
+}
+
+// Abort a request identified by id in the stream.
+message AbortRequest {
+  // Unique identifier of the corresponding request in the stream to abort.
+  // Not to be confused with the AbortRequest's id in the stream.
+  uint32 abortId = 1;
 }
 
 // Aerospike queries
