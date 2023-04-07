@@ -315,6 +315,10 @@ message PartitionStatus {
 
   // Digest to start scanning / querying after.
   optional bytes digest = 3;
+
+  // Indicates this partition should be tried.
+  // Should be set to true for the first attempt as well.
+  bool retry = 5;
 }
 
 // A partition filter for scans and queries.
@@ -332,6 +336,10 @@ message PartitionFilter {
   // Optional partition statuses used on retries to restart
   // from last known record for the partition.
   repeated PartitionStatus partitionStatuses = 4;
+
+  // Indicates if all partitions in this filter should
+  // be retried ignoring the partition status
+  bool retry = 5;
 }
 
 // A scan request.
