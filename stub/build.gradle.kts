@@ -10,31 +10,38 @@ apply(plugin = "com.google.protobuf")
 apply(plugin = "com.google.protobuf")
 
 dependencies {
-    protobuf(project(":aerospike-proxy-proto"))
-    api("com.google.protobuf:protobuf-java:${
-        project
-            .extra["protobufVersion"]
-    }")
+    protobuf("com.aerospike:aerospike-proxy-proto:0.9.0")
+    api(
+        "com.google.protobuf:protobuf-java:${
+            project
+                .extra["protobufVersion"]
+        }"
+    )
     api("io.grpc:grpc-netty:${project.extra["grpcVersion"]}")
     api("io.grpc:grpc-stub:${project.extra["grpcVersion"]}")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(
-        "org.jetbrains.kotlinx:kotlinx-coroutines-core:${project.extra["coroutinesVersion"]}")
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core:${project.extra["coroutinesVersion"]}"
+    )
 
     implementation("io.grpc:grpc-api:${project.extra["grpcVersion"]}")
 
     implementation("io.grpc:grpc-netty:${project.extra["grpcVersion"]}")
     implementation("com.google.guava:guava:31.1-jre")
     implementation("io.grpc:grpc-protobuf:${project.extra["grpcVersion"]}")
-    implementation("com.google.protobuf:protobuf-java-util:${
-        project
-            .extra["protobufVersion"]
-    }")
     implementation(
-        "com.google.protobuf:protobuf-kotlin:${project.extra["protobufVersion"]}")
+        "com.google.protobuf:protobuf-java-util:${
+            project
+                .extra["protobufVersion"]
+        }"
+    )
     implementation(
-        "io.grpc:grpc-kotlin-stub:${project.extra["grpcKotlinVersion"]}")
+        "com.google.protobuf:protobuf-kotlin:${project.extra["protobufVersion"]}"
+    )
+    implementation(
+        "io.grpc:grpc-kotlin-stub:${project.extra["grpcKotlinVersion"]}"
+    )
 }
 
 // this makes it so IntelliJ picks up the sources but then ktlint complains

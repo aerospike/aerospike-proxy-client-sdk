@@ -3,6 +3,7 @@
 usage() {
   cat <<EOF
 usage: bash release.sh --module aerospike-jms-outbound --version 1.1.0 --release-notes-file release-notes.md --release-args
+  -m  (Required)          Module to release
   -v  (Required)          Version
   -a                      Additional arguments to pass to gradle release command
   -h                      Print usage help
@@ -11,9 +12,12 @@ Requires github credentials as environment variables GITHUB_USERNAME and GITHUB_
 EOF
 }
 
-while getopts v:a:h opt; do
+while getopts m:v:a:h opt; do
   # shellcheck disable=SC2220
   case "$opt" in
+  m)
+        module=${OPTARG}
+        ;;
   v)
     version=${OPTARG}
     ;;
@@ -22,10 +26,15 @@ while getopts v:a:h opt; do
     ;;
   h)
     usage
-    exit 0
+    exit 1
     ;;
   esac
 done
+
+if [ -z "$module" ]; then
+  echo "Module name is required"
+  exit 1
+fi
 
 if [ -z "$version" ]; then
   echo "Release version is required"
@@ -43,18 +52,14 @@ if [ -z "$GITHUB_TOKEN" ]; then
 fi
 
 echo "--------------------------------------------------------------------------"
-echo "Releasing version:$version"
+echo "Releasing module:$module version:$version"
 echo "Args release-args:$releaseArgs"
 echo "--------------------------------------------------------------------------"
 
 # Run vulnerability scan
-./gradlew --no-daemon vulnerabilityScan
+./gradlew --no-daemon "$module:vulnerabilityScan"
 
-# Run the release task
-modules="proto stub"
-
-for module in $modules; do
-  cd "$module"
-  ../gradlew --no-daemon release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=$version  $releaseArgs
-  cd -
-done
+# Switch to module directory
+moduleDir=${module/aerospike-/}
+cd "$moduleDir" || exit 1
+../gradlew --no-daemon release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=$version  $releaseArgs
