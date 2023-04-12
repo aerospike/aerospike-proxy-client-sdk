@@ -48,7 +48,7 @@ echo "Args release-args:$releaseArgs"
 echo "--------------------------------------------------------------------------"
 
 # Run vulnerability scan
-./gradlew vulnerabilityScan
+./gradlew --no-daemon vulnerabilityScan
 
 # Run the release task
 modules="proto stub"
@@ -56,4 +56,5 @@ modules="proto stub"
 for module in $modules; do
   cd "$module"
   ../gradlew --no-daemon release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=$version  $releaseArgs
+  cd -
 done
