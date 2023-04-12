@@ -60,6 +60,6 @@ echo "--------------------------------------------------------------------------
 ./gradlew --no-daemon "$module:vulnerabilityScan"
 
 # Switch to module directory
-moduleDir=${module/aerospike-/}
+moduleDir=${module/aerospike-proxy-/}
 cd "$moduleDir" || exit 1
 ../gradlew --no-daemon release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=$version  $releaseArgs
