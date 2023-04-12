@@ -34,12 +34,12 @@ fi
 
 if [ -z "$GITHUB_USERNAME" ]; then
   echo "Github username environment variable GITHUB_USERNAME not set".
-  exit 0
+  exit 1
 fi
 
 if [ -z "$GITHUB_TOKEN" ]; then
   echo "Github access token environment variable GITHUB_TOKEN not set".
-  exit 0
+  exit 1
 fi
 
 echo "--------------------------------------------------------------------------"
