@@ -52,4 +52,4 @@ echo "--------------------------------------------------------------------------
 
 
 # Run the release task
-../gradlew --no-daemon release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=$version  $releaseArgs
+./gradlew --no-daemon release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=$version  $releaseArgs
