@@ -29,22 +29,17 @@ done
 
 if [ -z "$version" ]; then
   echo "Release version is required"
-  exit
-fi
-
-if [ -z "$releaseNotesFile" ]; then
-  echo "Release notes file is required"
-  exit
+  exit 1
 fi
 
 if [ -z "$GITHUB_USERNAME" ]; then
   echo "Github username environment variable GITHUB_USERNAME not set".
-  exit
+  exit 0
 fi
 
 if [ -z "$GITHUB_TOKEN" ]; then
   echo "Github access token environment variable GITHUB_TOKEN not set".
-  exit
+  exit 0
 fi
 
 echo "--------------------------------------------------------------------------"
