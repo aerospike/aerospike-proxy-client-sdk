@@ -26,18 +26,61 @@ import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import org.gradle.kotlin.dsl.*
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 /**
  * Setup Java tasks and compiler arguments.
  */
 fun Project.setupJavaBuild() {
+    val javaTargetVersion = "1.8"
+    project.extra["javaTargetVersion"] = javaTargetVersion
+
     val compileJava: JavaCompile by tasks
-    compileJava.sourceCompatibility = "1.8"
-    compileJava.targetCompatibility = "1.8"
+    compileJava.sourceCompatibility =
+        javaTargetVersion
+    compileJava.targetCompatibility =
+        javaTargetVersion
     compileJava.options.apply {
         compilerArgs.add("-Xlint:all")
         compilerArgs.add("-Werror")
         compilerArgs.add("-Xlint:-processing")
+    }
+
+
+    val compileTestJava: JavaCompile by tasks
+    compileTestJava.sourceCompatibility =
+        javaTargetVersion
+    compileTestJava.targetCompatibility =
+        javaTargetVersion
+    compileTestJava.options.apply {
+        compilerArgs.add("-Xlint:all")
+        compilerArgs.add("-Werror")
+    }
+
+    project.afterEvaluate {
+        if (tasks.findByName("compileKotlin") != null) {
+            /**
+             * Ensure code is compiled for java 8 target.
+             */
+            val compileKotlin: KotlinCompile by tasks
+            compileKotlin.kotlinOptions {
+                jvmTarget = javaTargetVersion
+                allWarningsAsErrors = true
+            }
+            val compileTestKotlin: KotlinCompile by tasks
+            compileTestKotlin.kotlinOptions {
+                jvmTarget = javaTargetVersion
+                allWarningsAsErrors = true
+            }
+        }
+
+        tasks.withType<Jar> {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
+        tasks.withType<org.gradle.jvm.tasks.Jar> {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
     }
 
     val java = (project.extensions["java"] as JavaPluginExtension)
@@ -55,6 +98,4 @@ fun Project.setupJavaBuild() {
             addBooleanOption("Xdoclint:none", true)
         }
     }
-
-    tasks.withType<Jar> { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
 }
