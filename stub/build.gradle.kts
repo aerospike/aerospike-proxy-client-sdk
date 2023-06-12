@@ -10,7 +10,7 @@ apply(plugin = "com.google.protobuf")
 apply(plugin = "com.google.protobuf")
 
 dependencies {
-    protobuf("com.aerospike:aerospike-proxy-proto:0.9.1-SNAPSHOT")
+    protobuf("com.aerospike:aerospike-proxy-proto:0.10.0")
     api(
         "com.google.protobuf:protobuf-java:${
             project
