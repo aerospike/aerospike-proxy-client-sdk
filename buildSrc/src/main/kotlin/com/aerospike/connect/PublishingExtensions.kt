@@ -63,9 +63,9 @@ fun Project.setupPublishingTasks() {
                 }
             }
             pom {
-                name.set("Aerospike Connect Outbound SDK")
+                name.set("Aerospike Proxy Client SDK")
                 description.set(
-                    "Outbound connector SDK for change notification transformers.")
+                    "Aerospike Proxy Client SDK for building clients.")
                 url.set(
                     "https://github.com/aerospike/aerospike-proxy-client-sdk")
                 licenses {

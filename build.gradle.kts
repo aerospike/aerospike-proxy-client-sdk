@@ -29,14 +29,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath("io.freefair.gradle:lombok-plugin:6.5.0.3")
+        classpath("io.freefair.gradle:lombok-plugin:6.6.3")
     }
 }
 
 plugins {
     jacoco
     id("io.snyk.gradle.plugin.snykplugin")
-    id("com.google.protobuf") version "0.9.1" apply false
+    id("com.google.protobuf") version "0.9.4" apply false
 }
 
 allprojects {
@@ -76,10 +76,10 @@ subprojects {
     group = "com.aerospike"
 
     // Common dependency versions
-    project.extra["protobufVersion"] = "3.23.1"
+    project.extra["protobufVersion"] = "3.24.0"
     project.extra["protocVersion"] = project.extra["protobufVersion"]
-    project.extra["grpcVersion"] = "1.55.1"
-    project.extra["coroutinesVersion"] = "1.7.1"
+    project.extra["grpcVersion"] = "1.57.2"
+    project.extra["coroutinesVersion"] = "1.7.3"
     project.extra["grpcKotlinVersion"] = "1.3.0"
 
     setupJavaBuild()

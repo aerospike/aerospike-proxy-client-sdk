@@ -88,10 +88,7 @@ protobuf {
             }
             it.builtins {
                 id("kotlin")
-                //id("go")
-                //id("go-grpc")
             }
         }
     }
 }
-

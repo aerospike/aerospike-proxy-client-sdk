@@ -32,5 +32,5 @@ repositories {
 dependencies {
     api("net.researchgate:gradle-release:2.8.1")
     api("io.snyk.gradle.plugin.snykplugin:io.snyk.gradle.plugin.snykplugin.gradle.plugin:0.4")
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.21")
+    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
 }
