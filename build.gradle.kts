@@ -64,6 +64,10 @@ subprojects {
         plugin("io.snyk.gradle.plugin.snykplugin")
     }
 
+    dependencies {
+        "dataFiles"("org.json:json:20230227")
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()
