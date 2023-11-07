@@ -111,7 +111,9 @@ message AerospikeRequestPayload {
   // Unique identifier of the request in the stream.
   uint32 id = 1;
 
-  // Client retry iteration.
+  // Client iteration number starting at 1. On first attempt iteration should
+  // be 1. On first retry iteration should be 2, on second retry iteration
+  // should be 3, and so on.
   uint32 iteration = 2;
 
   // Aerospike wire format request payload.
