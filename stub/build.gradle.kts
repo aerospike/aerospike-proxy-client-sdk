@@ -17,18 +17,24 @@ dependencies {
                 .extra["protobufVersion"]
         }"
     )
-    api("io.grpc:grpc-netty:${project.extra["grpcVersion"]}")
+    api("io.grpc:grpc-netty:${project.extra["grpcVersion"]}") {
+        exclude(group = "io.netty", module = "netty-codec-http2")
+    }
+    api(
+        "io.netty:netty-codec-http2:${project.ext["grpcNettyVersion"]}"
+    )
+
+
     api("io.grpc:grpc-stub:${project.extra["grpcVersion"]}")
 
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(
         "org.jetbrains.kotlinx:kotlinx-coroutines-core:${project.extra["coroutinesVersion"]}"
     )
 
     implementation("io.grpc:grpc-api:${project.extra["grpcVersion"]}")
-
-    implementation("io.grpc:grpc-netty:${project.extra["grpcVersion"]}")
-    implementation("com.google.guava:guava:31.1-jre")
+    implementation("com.google.guava:guava:32.1.3-jre")
     implementation("io.grpc:grpc-protobuf:${project.extra["grpcVersion"]}")
     implementation(
         "com.google.protobuf:protobuf-java-util:${

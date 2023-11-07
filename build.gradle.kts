@@ -62,10 +62,12 @@ subprojects {
         plugin("maven-publish")
         plugin("net.researchgate.release")
         plugin("io.snyk.gradle.plugin.snykplugin")
+        plugin("com.github.ben-manes.versions")
+
     }
 
     dependencies {
-        "dataFiles"("org.json:json:20230227")
+        "dataFiles"("org.json:json:20231013")
     }
 
     repositories {
@@ -80,11 +82,12 @@ subprojects {
     group = "com.aerospike"
 
     // Common dependency versions
-    project.extra["protobufVersion"] = "3.24.0"
+    project.extra["protobufVersion"] = "3.25.0"
     project.extra["protocVersion"] = project.extra["protobufVersion"]
-    project.extra["grpcVersion"] = "1.57.2"
+    project.extra["grpcVersion"] = "1.59.0"
+    project.extra["grpcNettyVersion"] = "4.1.100.Final"
     project.extra["coroutinesVersion"] = "1.7.3"
-    project.extra["grpcKotlinVersion"] = "1.3.0"
+    project.extra["grpcKotlinVersion"] = "1.4.0"
 
     setupJavaBuild()
     setupReleaseTasks()
