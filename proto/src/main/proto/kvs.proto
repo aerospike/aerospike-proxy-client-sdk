@@ -139,6 +139,9 @@ message AerospikeRequestPayload {
 
   // Request for getting background task status.
   optional BackgroundTaskStatusRequest backgroundTaskStatusRequest = 10;
+
+  // Info request
+  optional InfoRequest infoRequest = 11;
 }
 
 // The request message containing the user's name.
@@ -785,5 +788,26 @@ service Query {
 
   // Get status of a stream of background tasks.
   rpc BackgroundTaskStatusStreaming(stream AerospikeRequestPayload) returns
+      (stream AerospikeResponsePayload) {}
+}
+
+// Info policy for info request
+message InfoPolicy {
+  // Info command socket timeout in milliseconds.
+  //
+  // Default: 1000
+  optional uint32 timeout = 1;
+}
+
+// Info request
+message InfoRequest {
+  optional InfoPolicy infoPolicy = 1;
+  repeated string commands = 2;
+}
+
+// Aerospike info requests
+service Info {
+  // Send an info request
+  rpc Info (AerospikeRequestPayload) returns
       (stream AerospikeResponsePayload) {}
 }
