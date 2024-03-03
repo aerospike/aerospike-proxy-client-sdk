@@ -809,5 +809,5 @@ message InfoRequest {
 service Info {
   // Send an info request
   rpc Info (AerospikeRequestPayload) returns
-      (stream AerospikeResponsePayload) {}
+      (AerospikeResponsePayload) {}
 }
