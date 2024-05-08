@@ -75,6 +75,18 @@ enum Replica {
   RANDOM = 4;
 }
 
+enum QueryDuration {
+    // The query is expected to return less than 100 records per node. The server optimizes for a small record set.
+    SHORT = 0;
+
+    // The query is expected to return more than 100 records per node. The server optimizes for a large record set.
+    LONG = 1;
+
+    // Treat query as a LONG query, but relax read consistency for AP namespaces.
+    // This value is treated exactly like LONG for server versions &lt; 7.1.
+    LONG_RELAX_AP = 2;
+}
+
 // Read policy attributes used in read database commands that are not part of
 // the wire protocol.
 message ReadPolicy {
@@ -436,6 +448,7 @@ message QueryPolicy {
   // Default: false
   optional bool failOnClusterChange = 11;
 
+  // Deprecated, use expectedDuration instead.
   // Is query expected to return less than 100 records per node.
   // If true, the server will optimize the query for a small record set.
   // This field is ignored for aggregation queries, background queries
@@ -445,9 +458,13 @@ message QueryPolicy {
 
   // Timeout in milliseconds for "cluster-stable" info command that is run when
   // failOnClusterChange is true and server version is less than 6.0.
-  //
   //  Default: 1000
   optional uint32 infoTimeout = 13;
+
+  // Expected query duration. The server treats the query in different ways depending on the expected duration.
+  // This field is ignored for aggregation queries, background queries and server versions less than 6.0.
+  // Default: QueryDuration.LONG
+  optional QueryDuration expectedDuration = 14;
 }
 
 
