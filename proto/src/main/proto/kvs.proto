@@ -76,11 +76,14 @@ enum Replica {
 }
 
 enum QueryDuration {
-
+    // The query is expected to return less than 100 records per node. The server optimizes for a small record set.
     SHORT = 0;
 
+    // The query is expected to return more than 100 records per node. The server optimizes for a large record set.
     LONG = 1;
 
+    // Treat query as a LONG query, but relax read consistency for AP namespaces.
+    // This value is treated exactly like LONG for server versions &lt; 7.1.
     LONG_RELAX_AP = 2;
 }
 
