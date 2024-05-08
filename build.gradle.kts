@@ -79,6 +79,13 @@ subprojects {
         }
     }
 
+    // Fetch latest snapshots.
+    configurations.all {
+        resolutionStrategy {
+            cacheChangingModulesFor(0, TimeUnit.SECONDS)
+        }
+    }
+
     group = "com.aerospike"
 
     // Common dependency versions
