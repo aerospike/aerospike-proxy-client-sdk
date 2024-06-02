@@ -34,7 +34,7 @@ dependencies {
     )
 
     implementation("io.grpc:grpc-api:${project.extra["grpcVersion"]}")
-    implementation("com.google.guava:guava:32.1.3-jre")
+    implementation("com.google.guava:guava:33.2.1-jre")
     implementation("io.grpc:grpc-protobuf:${project.extra["grpcVersion"]}")
     implementation(
         "com.google.protobuf:protobuf-java-util:${

@@ -29,7 +29,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath("io.freefair.gradle:lombok-plugin:6.6.3")
+        classpath("io.freefair.gradle:lombok-plugin:8.6")
     }
 }
 
@@ -89,12 +89,12 @@ subprojects {
     group = "com.aerospike"
 
     // Common dependency versions
-    project.extra["protobufVersion"] = "3.25.0"
+    project.extra["protobufVersion"] = "4.27.0"
     project.extra["protocVersion"] = project.extra["protobufVersion"]
-    project.extra["grpcVersion"] = "1.59.0"
-    project.extra["grpcNettyVersion"] = "4.1.100.Final"
-    project.extra["coroutinesVersion"] = "1.7.3"
-    project.extra["grpcKotlinVersion"] = "1.4.0"
+    project.extra["grpcVersion"] = "1.64.0"
+    project.extra["grpcNettyVersion"] = "4.1.110.Final"
+    project.extra["coroutinesVersion"] = "1.8.1"
+    project.extra["grpcKotlinVersion"] = "1.4.1"
 
     setupJavaBuild()
     setupReleaseTasks()
