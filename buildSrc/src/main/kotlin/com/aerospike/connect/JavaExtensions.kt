@@ -26,6 +26,7 @@ import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import org.gradle.kotlin.dsl.*
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 /**
@@ -63,13 +64,13 @@ fun Project.setupJavaBuild() {
              * Ensure code is compiled for java 8 target.
              */
             val compileKotlin: KotlinCompile by tasks
-            compileKotlin.kotlinOptions {
-                jvmTarget = javaTargetVersion
+            compileKotlin.compilerOptions {
+                jvmTarget = JvmTarget.fromTarget(javaTargetVersion)
                 allWarningsAsErrors = true
             }
             val compileTestKotlin: KotlinCompile by tasks
-            compileTestKotlin.kotlinOptions {
-                jvmTarget = javaTargetVersion
+            compileTestKotlin.compilerOptions {
+                jvmTarget = JvmTarget.fromTarget(javaTargetVersion)
                 allWarningsAsErrors = true
             }
         }

@@ -29,7 +29,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath("io.freefair.gradle:lombok-plugin:8.6")
+        classpath("io.freefair.gradle:lombok-plugin:8.10")
     }
 }
 
@@ -44,7 +44,7 @@ allprojects {
     pluginManager.withPlugin("jacoco") {
         // If this project has the plugin applied, configure the tool version.
         jacoco {
-            toolVersion = "0.8.7"
+            toolVersion = "0.8.12"
         }
     }
 }
@@ -89,12 +89,13 @@ subprojects {
     group = "com.aerospike"
 
     // Common dependency versions
-    project.extra["protobufVersion"] = "4.27.0"
+    project.extra["protobufVersion"] = "4.28.2"
     project.extra["protocVersion"] = project.extra["protobufVersion"]
-    project.extra["grpcVersion"] = "1.64.0"
-    project.extra["grpcNettyVersion"] = "4.1.110.Final"
-    project.extra["coroutinesVersion"] = "1.8.1"
+    project.extra["grpcVersion"] = "1.68.0"
+    project.extra["grpcNettyVersion"] = "4.1.113.Final"
+    project.extra["coroutinesVersion"] = "1.9.0"
     project.extra["grpcKotlinVersion"] = "1.4.1"
+    project.extra["guavaVersion"] = "33.3.0-jre"
 
     setupJavaBuild()
     setupReleaseTasks()
