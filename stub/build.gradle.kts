@@ -7,10 +7,9 @@ plugins {
 }
 
 apply(plugin = "com.google.protobuf")
-apply(plugin = "com.google.protobuf")
 
 dependencies {
-    protobuf("com.aerospike:aerospike-proxy-proto:1.1.0")
+    protobuf("com.aerospike:aerospike-proxy-proto:1.1.1-SNAPSHOT")
     api(
         "com.google.protobuf:protobuf-java:${
             project
@@ -34,7 +33,7 @@ dependencies {
     )
 
     implementation("io.grpc:grpc-api:${project.extra["grpcVersion"]}")
-    implementation("com.google.guava:guava:33.2.1-jre")
+    implementation("com.google.guava:guava:${project.extra["guavaVersion"]}")
     implementation("io.grpc:grpc-protobuf:${project.extra["grpcVersion"]}")
     implementation(
         "com.google.protobuf:protobuf-java-util:${
@@ -66,7 +65,7 @@ java {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
-    kotlinOptions {
+    compilerOptions {
         freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
     }
 }
